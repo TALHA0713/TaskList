@@ -43,7 +43,7 @@ const Firstpage = () => {
   };
 
   return (
-    <div className="bg-white rounded-md m-3">
+    <div className="bg-white rounded-md m-1">
       <h1 className="px-6 font-bold text-2xl">Analytics</h1>
 
       <section className="  grid grid-cols-4 ">

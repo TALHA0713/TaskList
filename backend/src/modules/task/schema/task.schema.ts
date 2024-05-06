@@ -6,7 +6,7 @@ import mongoose, { Document } from 'mongoose';
 @Schema({ timestamps: true })
 export class Task extends Document {
   @Prop({ required: true })
-  name: string;
+  tittle: string;
 
   @Prop({ required: true, maxLength: 255 })
   description: string;

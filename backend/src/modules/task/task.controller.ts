@@ -49,7 +49,7 @@ export class TaskController {
     description: 'Some Unknown Error Occurred',
   })
   @ApiOperation({ description: 'Create New Task' })
-  @Public()
+  // @Public()
   @Post()
   async create(@Body() create: create_task ): Promise<Task> {
     const Task= this.taskService.create(create);
@@ -71,7 +71,7 @@ export class TaskController {
   @ApiNotFoundResponse({
     description: 'TAsks Not Found',
   })
-  @Public()
+  // @Public()
   @Get()
   findAll(): any {
     return this.taskService.findAll();
@@ -91,7 +91,7 @@ export class TaskController {
   @ApiNotFoundResponse({
     description: 'Task Not Found',
   })
-  @Public()
+  // @Public()
   @Get(':id')
     @UseGuards(AuthGuard('jwt'))
   findOne(@Param('id') id: string) {
@@ -110,9 +110,8 @@ export class TaskController {
   })
   @ApiOperation({ description: 'Update Task' })
   @UseGuards(AuthGuard('jwt'))
-  @Patch('update')
-  update(@Request() req, @Body() updateTaskDto: create_task) {
-    const { id } = req.Task;
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateTaskDto: create_task) {
     return this.taskService.update(id, updateTaskDto);
   }
 

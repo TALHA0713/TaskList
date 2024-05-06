@@ -1,28 +1,78 @@
+import React, { useState } from "react";
 import { useFormik } from "formik";
-import { basicSchema } from "../../../schemas/Login-Validation.js";
+import * as Yup from "yup";
 import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
-import { useState } from "react";
-
-const onSubmit = async (values, actions) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  actions.resetForm();
-};
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    password: Yup.string()
+      .min(8, "Password must be at least 8 characters")
+      .required("Password is required"),
+  });
+
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(eyeOff);
 
-  const handleToggle = () => {
-    if (type === "password") {
-      setIcon(eye);
-      setType("text");
-    } else {
-      setIcon(eyeOff);
-      setType("password");
+  const handleSubmitForm = async (values, { setSubmitting, resetForm }) => {
+    try {
+      const formData = {
+        ...values,
+        status: "ACTIVE",
+        role: "CLIENT",
+      };
+
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      };
+
+      console.log(requestOptions);
+      const response = await fetch(
+        "http://localhost:3333/auth/sign-in",
+        requestOptions
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      const token = JSON.stringify(data);
+      console.log(token);
+
+      sessionStorage.setItem("token", token);
+      toast.success("Please set a route for redirection", { autoClose: 2000 });
+      resetForm();
+      window.location.href = "/";
+    } catch (error) {
+      toast.error("Invalid email or password", { autoClose: 2000 });
+      console.error("There was a problem with the POST request:", error);
+    } finally {
+      setSubmitting(false);
     }
   };
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema,
+    onSubmit: handleSubmitForm,
+  });
+
+  const handleToggle = () => {
+    setType((prevType) => (prevType === "password" ? "text" : "password"));
+    setIcon((prevIcon) => (prevIcon === eyeOff ? eye : eyeOff));
+  };
+
   const {
     values,
     errors,
@@ -31,22 +81,12 @@ function Login() {
     handleBlur,
     handleChange,
     handleSubmit,
-  } = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      password: "",
-    },
-    validationSchema: basicSchema,
-    onSubmit,
-  });
-
-  console.log(errors);
+  } = formik;
 
   return (
-    <div className={"w-[100vw] h-[100vh] bg-white text-slate-900 flex"}>
-      {/*==== Left Side ====*/}
-      <div className="w-[50%]  bg-cyan-400 relative">
+    <div className="w-full h-screen bg-white text-slate-900 flex">
+      {/* Left Side */}
+      <div className="w-1/2 bg-cyan-400 relative">
         <div className="mt-10 flex items-center justify-center">
           <img src="/Task.png" alt="Task List" className="inline-block" />
           <h2 className="text-white font-bold leading-4 text-3xl inline-block">
@@ -60,16 +100,15 @@ function Login() {
         />
       </div>
 
-      {/*==== Right Side ====*/}
-
+      {/* Right Side */}
       <form
-        className="w-[50%] h-full bg-white grid place-content-center"
+        className="w-1/2 h-full bg-white grid place-content-center"
         onSubmit={handleSubmit}
       >
         <div className="">
           <h1 className="text-2xl font-bold">Sign In to your Account</h1>
           <p className="font-light mt-2 mb-8 text-gray-500">
-            Welcome back! plz enter your detail
+            Welcome back! Please enter your details.
           </p>
         </div>
 
@@ -82,11 +121,11 @@ function Login() {
               value={values.email}
               onChange={handleChange}
               placeholder="Email"
+              onBlur={handleBlur}
               className={
                 "w-[400px] h-12 px-4 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 pl-10" +
                 (errors.email && touched.email ? " input-error" : "")
               }
-              onBlur={handleBlur}
             />
             {errors.email && touched.email && (
               <p className="error text-red-500 mt-2 text-sm">{errors.email}</p>
@@ -106,13 +145,14 @@ function Login() {
               value={values.password}
               onChange={handleChange}
               placeholder="Password"
+              onBlur={handleBlur}
               className={
                 "w-[400px] h-12 px-4 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 pl-10 pr-10" +
-                (errors.password && touched.password ? "input-error" : "")
+                (errors.password && touched.password ? " input-error" : "")
               }
             />
             {errors.password && touched.password && (
-              <p className="error  text-red-500 text-sm mt-2">
+              <p className="error text-red-500 text-sm mt-2">
                 {errors.password}
               </p>
             )}
@@ -126,7 +166,6 @@ function Login() {
                 size={25}
               />
             </span>
-
             <img
               src="/lock.svg"
               alt=""
@@ -154,12 +193,13 @@ function Login() {
 
           <p className="text-med text-gray-600 justify-center text-center">
             Don't have an account?{" "}
-            <a href="/login" className="text-blue-500 font-bold">
+            <a href="/signup" className="text-blue-500 font-bold">
               Sign Up
             </a>
           </p>
         </div>
       </form>
+      <ToastContainer position="top-right" style={{ marginTop: "1rem" }} />
     </div>
   );
 }

@@ -11,7 +11,7 @@ export class create_task {
   @ApiProperty({ required: true })
   @IsString()
   @IsNotEmpty()
-  name: string;
+  tittle: string;
 
   @ApiProperty({ required: true, maxLength: 255 })
   @IsString()
@@ -27,7 +27,6 @@ export class create_task {
   @IsNotEmpty()
   endDate: string;
 
-  @IsNotEmpty()
   @ArrayMinSize(1)
   @ArrayMaxSize(100)
   @ApiProperty({ required: true})

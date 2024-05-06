@@ -43,7 +43,10 @@ export class TaskService {
 
   async findAll(): Promise<Task[]> {
     try {
-      return await this.TaskModel.find().populate('users').exec();
+      return await this.TaskModel.find().populate('users').populate({
+        path: 'users',
+        select: '-password' 
+      }).exec();
     } catch (error) {
       throw new NotFoundException('No Tasks found');
     }

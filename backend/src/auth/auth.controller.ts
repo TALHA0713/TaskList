@@ -42,10 +42,9 @@ export class AuthController {
   @Post('sign-in')
   signIn(
     @Body() user: SignInRequest,
-  ): Promise<AccessTokenResponse | errorResponse> {
+  ):Promise<any>{
     return this.authService.signIn(user);
   }
-
   @ApiOkResponse({ description: 'SignUp successful' })
   @ApiBadRequestResponse({ description: 'Issue in request data' })
   @ApiUnauthorizedResponse({ description: 'Email already exists' })
