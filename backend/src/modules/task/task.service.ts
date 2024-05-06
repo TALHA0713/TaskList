@@ -11,7 +11,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { create_task } from './dto/create_task.dto';
 import { Http500 } from 'src/utils/Http500';
-import { Task, TaskStatus } from './schema/task.schema';
+import { Task } from './schema/task.schema';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -29,7 +29,9 @@ export class TaskService {
     try {
       const newTask = new this.TaskModel(createTaskDto);
       const Task = await newTask.save();
-      return await this.findOne(Task._id);
+      // console.log(Task);
+      
+      return Task;
     } catch (error) {
       Http500.throw(error);
     }
@@ -41,7 +43,7 @@ export class TaskService {
 
   async findAll(): Promise<Task[]> {
     try {
-      return await this.TaskModel.find().exec();
+      return await this.TaskModel.find().populate('users').exec();
     } catch (error) {
       throw new NotFoundException('No Tasks found');
     }
@@ -52,14 +54,18 @@ export class TaskService {
      *****************************************************************************************************************/
 
   async findOne(id: string): Promise<Task> {
-    try {
-      const Task = await this.TaskModel.findById(id).exec();
+    try { 
+      const task = await this.TaskModel.findById(id).populate({
+        path: 'users',
+        select: '-password' 
+      }).exec();
+  
 
       if (!Task) {
         throw new NotFoundException('Task not found');
       }
 
-      return Task;
+      return task;
     } catch (error) {
       throw new NotFoundException('Task not found');
     }

@@ -30,6 +30,7 @@ import { create_task } from './dto/create_task.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { Public } from 'src/auth/decorators/setmetadata.decorator';
+import { log } from 'console';
 
 @ApiBearerAuth()
 @ApiTags('Task')
@@ -50,21 +51,10 @@ export class TaskController {
   @ApiOperation({ description: 'Create New Task' })
   @Public()
   @Post()
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-          cb(null, file.originalname);
-        },
-      }),
-    }),
-  )
-  async create(
-    @Body() create: create_task,
-    // @UploadedFile() image: Express.Multer.File,
-  ): Promise<Task> {
-    return this.taskService.create(create);
+  async create(@Body() create: create_task ): Promise<Task> {
+    const Task= this.taskService.create(create);
+    return Task;
+
   }
 
   /*****************************************************************************************************************
@@ -103,7 +93,7 @@ export class TaskController {
   })
   @Public()
   @Get(':id')
-  //   @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard('jwt'))
   findOne(@Param('id') id: string) {
     return this.taskService.findOne(id);
   }
@@ -141,7 +131,7 @@ export class TaskController {
     description: 'Task Not Found',
   })
   @Public()
-  //   @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.taskService.remove(id);

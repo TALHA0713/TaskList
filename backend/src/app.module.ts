@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './modules/user/user.module';
+import { taskModule } from './modules/task/task.module';
 
 @Module({
   imports: [
@@ -14,6 +15,8 @@ import { UserModule } from './modules/user/user.module';
     DatabaseModule,
     AuthModule,
     UserModule,
+    taskModule
+
   ],
   controllers: [],
   providers: [

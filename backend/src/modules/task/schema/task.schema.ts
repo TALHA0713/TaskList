@@ -1,31 +1,25 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
-export enum TaskStatus {
-  TODO = 'TODO',
-  IN_PROGRESS = 'IN_PROGRESS',
-  DONE = 'DONE',
-}
+
 
 @Schema({ timestamps: true })
 export class Task extends Document {
   @Prop({ required: true })
-  title: string;
+  name: string;
 
   @Prop({ required: true, maxLength: 255 })
   description: string;
 
-  @Prop()
-  image: string;
+  @Prop({ required: true})
+  startDate: string;
 
-  @Prop({ required: true, enum: TaskStatus, default: TaskStatus.TODO })
-  status: string;
+  @Prop({ required: true })
+  endDate: string;
 
-  @Prop({ required: true, type: Date })
-  startDate: Date;
+  @Prop({ type: [{ type: mongoose.Types.ObjectId, ref: 'User' }] })
+  users: string[]; 
 
-  @Prop({ required: true, type: Date })
-  endDate: Date;
 }
 
 export const TaskSchema = SchemaFactory.createForClass(Task);

@@ -3,15 +3,15 @@ import {
   IsString,
   IsNotEmpty,
   Length,
-  IsEnum,
-  IsOptional,
+  ArrayMaxSize,
+  ArrayMinSize,
 } from 'class-validator';
 
 export class create_task {
   @ApiProperty({ required: true })
   @IsString()
   @IsNotEmpty()
-  title: string;
+  name: string;
 
   @ApiProperty({ required: true, maxLength: 255 })
   @IsString()
@@ -19,15 +19,18 @@ export class create_task {
   @Length(1, 255)
   description: string;
 
-  @ApiProperty({ required: false, type: 'string', format: 'binary' })
-  @IsOptional()
-  image: Express.Multer.File;
-
-  @ApiProperty({ required: true, type: Date })
+  @ApiProperty({ required: true })
   @IsNotEmpty()
-  startDate: Date;
+  startDate: string;
 
-  @ApiProperty({ required: true, type: Date })
+  @ApiProperty({ required: true })
   @IsNotEmpty()
-  endDate: Date;
+  endDate: string;
+
+  @IsNotEmpty()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(100)
+  @ApiProperty({ required: true})
+  @IsNotEmpty()
+  users: [];
 }

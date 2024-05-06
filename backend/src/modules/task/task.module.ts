@@ -8,9 +8,6 @@ import { TaskService } from './task.service';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Task.name, schema: TaskSchema }]),
-    MulterModule.register({
-      dest: './uploads', // Destination folder for uploaded files
-    }),
   ],
   controllers: [TaskController],
   providers: [TaskService],
