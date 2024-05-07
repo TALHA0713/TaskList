@@ -92,10 +92,9 @@ export class UserController {
   @ApiNotFoundResponse({
     description: 'User Not Found',
   })
-  @Get('single')
+  @Get(':id')
   @UseGuards(AuthGuard('jwt'))
-  findOne(@Request() req) {
-    const { id } = req.user;
+  findOne(@Param('id') id:string) {
     return this.userService.findOne(id);
   }
 

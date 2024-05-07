@@ -1,12 +1,17 @@
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDashboard, faGreaterThan } from "@fortawesome/free-solid-svg-icons";
-
+import React, { useEffect } from "react";
 import UpperNavbar from "../../Navbar/UpperNavbar.jsx";
 import SideNavbar from "../../Navbar/SideNavbar.jsx";
 import FirstPage from "../FirstPage.jsx";
 
 function Home() {
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      console.error("No token found in session storage.");
+      window.location.href = "/login";
+    }
+  }, []);
+
   return (
     <div className="min-h-screen w-screen bg-slate-200">
       <UpperNavbar heading="Dashboard" />

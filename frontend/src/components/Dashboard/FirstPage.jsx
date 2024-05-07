@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
 Chart.register(...registerables);
@@ -9,6 +9,14 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import "react-calendar/dist/Calendar.css";
 
 const Firstpage = () => {
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      console.error("No token found in session storage.");
+      window.location.href = "/login";
+    }
+  }, []);
+
   const [date, setDate] = useState(new Date());
 
   const onChange = (newDate) => {

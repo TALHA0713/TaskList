@@ -9,9 +9,11 @@ function UpperNavbar({ heading = "Dashboard" }) {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    // Retrieve token from sessionStorage
     const token = sessionStorage.getItem("token");
-    // console.log(token);
+    if (!token) {
+      console.error("No token found in session storage.");
+      window.location.href = "/login";
+    }
 
     if (token) {
       let decodedToken;
@@ -21,14 +23,13 @@ function UpperNavbar({ heading = "Dashboard" }) {
         const arrayToken = token1.split(".");
         const tokenPayload = JSON.parse(atob(arrayToken[1]));
         var name = tokenPayload.name;
-        // console.log(name);
       } catch (error) {
         console.error("Error parsing token:", error);
         return;
       }
 
       const userName = name;
-      console.log(userName);
+      // console.log(userName);
       setUserName(userName);
     }
   }, []);
@@ -50,9 +51,10 @@ function UpperNavbar({ heading = "Dashboard" }) {
 
         {/* RIGHT-Side */}
         <div className="w-[78%] flex items-center justify-between px-12">
-          <h1 className={"text-2xl font-bold"}>{heading}</h1>
+          <h1 className="text-2xl font-bold">{heading}</h1>
 
-          <div className="w-auto flex gap-8">
+          <div className="flex gap-8">
+            {/* Notifications */}
             <a href="/notify">
               <img
                 className="relative top-2"
@@ -61,16 +63,22 @@ function UpperNavbar({ heading = "Dashboard" }) {
               />
             </a>
 
-            <div className={"w-[200px] h-[50px] rounded"}>
-              <img src="Profile.png" className="flex w-10 mt-2 pl-1" alt="" />
-              <p className="absolute  top-6 right-[60px]">{userName}</p>
-              <p className="absolute  top-12 right-[114px]">Status 200</p>
-              <button className=" absolute top-9 right-[30px] border-none bg-none">
-                <FontAwesomeIcon icon={faGreaterThan} />
-              </button>
+            {/* User Profile */}
+            <div className="flex items-center">
+              <img src="Profile.png" className="w-10 h-10" alt="" />
+              <div className="ml-2">
+                <p className="font-semibold">{userName}</p>
+                <p>Status-200</p>
+              </div>
             </div>
+
+            {/* Icon */}
+            <button className="border-none bg-none">
+              <FontAwesomeIcon icon={faGreaterThan} />
+            </button>
           </div>
         </div>
+
         {/* ========== */}
       </div>
     </nav>

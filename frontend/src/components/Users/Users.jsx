@@ -10,6 +10,11 @@ const Users = () => {
     const fetchData = async () => {
       try {
         const token = sessionStorage.getItem("token");
+        if (!token) {
+          console.error("No token found in session storage.");
+          window.location.href = "/login";
+        }
+
         const decodedToken = JSON.parse(token);
         const token1 = decodedToken.token;
 
@@ -50,9 +55,9 @@ const Users = () => {
         >
           <div className="w-[90%] bg-white rounded border border-sky-400 px-6 py-3">
             <div className="w-full h-full">
-              <h1 className="pt-6 pb-10 font-bold text-2xl">Online User</h1>
+              <h1 className="pt-6 pb-10 font-bold text-2xl">Users</h1>
 
-              <div className="ml-5 mb-5 flex gap-[86px]">
+              <div className="ml-5 mb-5 flex gap-[77px]">
                 <h1 className="text-md font-semibold w-[9rem]">
                   Customer Name
                 </h1>
@@ -64,7 +69,7 @@ const Users = () => {
               {data.map((task, index) => (
                 <div
                   key={index}
-                  className="mb-3 py-3 flex gap-[10px] border-b space-x-[52px] items-center pr-6"
+                  className="mb-3 py-3 flex gap-[6px] border-b space-x-[52px] items-center pr-6"
                 >
                   <div className="ml-5 flex items-center space-x-2 w-[9rem]">
                     <img
@@ -80,7 +85,12 @@ const Users = () => {
                   <div className="px-5 w-30">{task.startDate}</div>
                   <div className="px-5 w-30">{task.endDate}</div>
                   <div className="w-28 flex items-start justify-between px-2">
-                    {calculateOverdueDays(task.endDate)} days
+                    {calculateOverdueDays(task.endDate) === 0 ? (
+                      <p className="text-red-500">Due today!</p>
+                    ) : (
+                      <p>{calculateOverdueDays(task.endDate)} days</p>
+                    )}
+
                     <svg
                       className=""
                       width="20"

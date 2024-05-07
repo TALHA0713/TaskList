@@ -11,28 +11,23 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Task = () => {
-  // Function to calculate remaining days until end date
-  const getRemainingDays = (endDate) => {
-    const today = new Date();
-    const end = new Date(endDate);
-    const diffTime = end.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  };
-
-  // Function to determine background color based on remaining days
   const getTaskBackgroundColor = (endDate) => {
-    const remainingDays = getRemainingDays(endDate);
-    if (remainingDays < 2) {
-      return "red"; // Less than 2 days left
-    } else if (remainingDays >= 3 && remainingDays <= 7) {
-      return "orange"; // Between 3 and 7 days left
+    const endDateTime = new Date(endDate).getTime();
+    const currentDateTime = new Date().getTime();
+    console.log(currentDateTime);
+    const diffTime = endDateTime - currentDateTime;
+    const diffInDays = Math.ceil(diffTime / (1000 * 3600 * 24));
+
+    if (diffInDays <= 2) {
+      return "bg-red-500";
+    } else if (diffInDays <= 7) {
+      return "bg-orange-500";
     } else {
-      return "green"; // More than 7 days left
+      return "bg-green-500";
     }
   };
 
-  const [tasks, setTasks] = useState([]); // Define state for tasks
+  const [tasks, setTasks] = useState([]);
   const [showOptions, setShowOptions] = useState({});
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [openModal, setOpenModal] = useState(false);
@@ -162,12 +157,11 @@ const Task = () => {
                   {tasks.map((task, index) => (
                     <div
                       key={task._id}
-                      className=" rounded-lg shadow-md flex flex-col"
-                      style={{
-                        backgroundColor: getTaskBackgroundColor(task.endDate),
-                      }}
+                      className={`rounded-t-xl ${getTaskBackgroundColor(
+                        task.endDate
+                      )}`} // Apply conditional background color based on remaining days
                     >
-                      <div className="h-8 grow rounded-t-xl bg-pink-300"></div>
+                      <div className="h-8 grow "></div>
                       <div className="p-4 relative bg-white">
                         <h1 className="text-lg font-bold">Title</h1>
                         <h3>{task.tittle}</h3>

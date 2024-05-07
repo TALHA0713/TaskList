@@ -31,6 +31,11 @@ const Notification = () => {
   const [yesterdayNotifications, setYesterdayNotifications] = useState([]);
 
   useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      console.error("No token found in session storage.");
+      window.location.href = "/login";
+    }
     sortNotification();
     setupNotificationIntervals();
   }, []);

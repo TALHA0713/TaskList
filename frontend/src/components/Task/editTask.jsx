@@ -99,13 +99,13 @@ const EditTask = ({ taskId }) => {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="tittle"
             >
-              tittle
+              Title
             </label>
             <input
               className="shadow appearance-none border rounded-lg w-full py-4 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="tittle"
               type="text"
-              placeholder="Enter tittle"
+              placeholder="Enter title"
               value={taskData.tittle}
               onChange={(e) =>
                 setTaskData({ ...taskData, tittle: e.target.value })
@@ -121,7 +121,7 @@ const EditTask = ({ taskId }) => {
               Description
             </label>
             <textarea
-              className="shadow appearance-none border rounded-lg w-full py-4 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded-lg w-full py-8 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline sticky top-0"
               id="description"
               placeholder="Enter description"
               value={taskData.description}
@@ -141,7 +141,7 @@ const EditTask = ({ taskId }) => {
             <input
               className="shadow appearance-none border rounded-lg w-full py-4 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="startDate"
-              // type="date"
+              type="date"
               value={taskData.startDate}
               onChange={(e) =>
                 setTaskData({ ...taskData, startDate: e.target.value })
@@ -159,7 +159,7 @@ const EditTask = ({ taskId }) => {
             <input
               className="shadow appearance-none border rounded-lg w-full py-4 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="endDate"
-              // type="date"
+              type="date"
               value={taskData.endDate}
               onChange={(e) =>
                 setTaskData({ ...taskData, endDate: e.target.value })

@@ -22,8 +22,6 @@ function Login() {
     try {
       const formData = {
         ...values,
-        status: "ACTIVE",
-        role: "CLIENT",
       };
 
       const requestOptions = {
@@ -45,7 +43,7 @@ function Login() {
 
       const data = await response.json();
       const token = JSON.stringify(data);
-      console.log(token);
+      // console.log(token);
 
       sessionStorage.setItem("token", token);
       toast.success("Please set a route for redirection", { autoClose: 2000 });
@@ -105,7 +103,7 @@ function Login() {
         className="w-1/2 h-full bg-white grid place-content-center"
         onSubmit={handleSubmit}
       >
-        <div className="">
+        <div>
           <h1 className="text-2xl font-bold">Sign In to your Account</h1>
           <p className="font-light mt-2 mb-8 text-gray-500">
             Welcome back! Please enter your details.

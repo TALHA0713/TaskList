@@ -36,17 +36,13 @@ const AddTask = () => {
       };
 
       console.log(requestOptions);
+
       const response = await fetch(
         "http://localhost:3333/task",
         requestOptions
       );
       const data = await response.json();
-
-      setTimeout(() => {
-        toast.success("Task updated successfully", { autoClose: 2000 });
-        // Redirect after displaying success message
-        window.location.href = "/task";
-      }, 2000);
+      window.location.href = "/Task";
 
       console.log("Task added successfully:", data);
 
@@ -76,20 +72,21 @@ const AddTask = () => {
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="title"
+              htmlFor="tittle"
             >
-              Title
+              Tittle
             </label>
             <input
               className="shadow appearance-none border rounded-lg w-full py-4 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="tittle"
               type="text"
               name="tittle"
-              placeholder="Enter title"
+              placeholder="Enter tittle"
               value={formData.tittle}
               onChange={handleChange}
             />
           </div>
+
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -100,14 +97,16 @@ const AddTask = () => {
                 (up to 255 characters)
               </span>
             </label>
+
             <textarea
-              className="shadow appearance-none border rounded-lg w-full py-10  text-gray-700 leading-tight focus:outline-none focus:shadow-outline placeholder-top"
+              className="description-input shadow appearance-none border rounded-lg w-full py-6 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none"
               id="description"
-              placeholder="Enter description"
               name="description"
+              placeholder="Enter description"
               value={formData.description}
               onChange={handleChange}
-            ></textarea>
+              maxLength={255}
+            />
           </div>
 
           <div class="mb-4">
@@ -117,26 +116,26 @@ const AddTask = () => {
             >
               Attachment
             </label>
+
             <input
               type="file"
               class="shadow appearance-none border rounded-lg w-full py-10 px-[105px] text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="attachment"
             />
           </div>
-
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="title"
+              htmlFor="startDate"
             >
-              start Date
+              Start Date
             </label>
             <input
               className="shadow appearance-none border rounded-lg w-full py-4 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="startDate"
-              type="text"
+              type="date"
               name="startDate"
-              placeholder="25-5-2024"
+              placeholder="Select Start Date"
               value={formData.startDate}
               onChange={handleChange}
             />
@@ -145,20 +144,21 @@ const AddTask = () => {
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="title"
+              htmlFor="endDate"
             >
-              end Date
+              End Date
             </label>
             <input
               className="shadow appearance-none border rounded-lg w-full py-4 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="endDate"
-              type="text"
+              type="date"
               name="endDate"
-              placeholder="25-5-2024"
+              placeholder="Select End Date"
               value={formData.endDate}
               onChange={handleChange}
             />
           </div>
+
           <div className="flex items-center justify-center">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
