@@ -8,7 +8,7 @@ function SideNavbar() {
   return (
     <nav
       id="Side-Navbar"
-      className="fixed w-[341px] h-full bg-white border-[1px]  border-r-slate-200 box-border "
+      className="fixed w-[273px] h-full bg-white border-[1px]  border-r-slate-200 box-border "
     >
       <div className="w-full h-full mt-4 mb-7 px-6">
         <h1 className="text-xl font-bold">MENU</h1>

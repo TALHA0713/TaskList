@@ -52,7 +52,7 @@ const Users = () => {
             <div className="w-full h-full">
               <h1 className="pt-6 pb-10 font-bold text-2xl">Online User</h1>
 
-              <div className="ml-5 mb-5 flex gap-[106px]">
+              <div className="ml-5 mb-5 flex gap-[86px]">
                 <h1 className="text-md font-semibold w-[9rem]">
                   Customer Name
                 </h1>
@@ -64,7 +64,7 @@ const Users = () => {
               {data.map((task, index) => (
                 <div
                   key={index}
-                  className="mb-3 py-3 flex gap-[40px] border-b space-x-[52px] items-center pr-6"
+                  className="mb-3 py-3 flex gap-[10px] border-b space-x-[52px] items-center pr-6"
                 >
                   <div className="ml-5 flex items-center space-x-2 w-[9rem]">
                     <img
