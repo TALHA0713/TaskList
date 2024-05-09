@@ -14,7 +14,6 @@ const Task = () => {
   const getTaskBackgroundColor = (endDate) => {
     const endDateTime = new Date(endDate).getTime();
     const currentDateTime = new Date().getTime();
-    console.log(currentDateTime);
     const diffTime = endDateTime - currentDateTime;
     const diffInDays = Math.ceil(diffTime / (1000 * 3600 * 24));
 
@@ -32,6 +31,22 @@ const Task = () => {
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [openModal1, setOpenModal1] = useState(false);
+
+  const [search, setSearch] = useState("");
+  const [results, setResults] = useState("");
+
+  useEffect(() => {
+    tasks.filter((task) => {
+      if (search == "") {
+        window.location.href = "Task";
+        return task;
+      }
+    });
+  }, [search]);
+
+  const getValue = () => {
+    setResults(search);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -145,8 +160,14 @@ const Task = () => {
                     type="text"
                     placeholder="Search"
                     className="w-[23%] mt-3 border-gray-300 rounded-l-lg border-r-0 pl-2 h-[40px]"
+                    onChange={(event) => {
+                      setSearch(event.target.value);
+                    }}
                   />
-                  <button className="bg-blue-500 h-[25%] pt-[10px] px-10 py-2 rounded-r-lg text-white">
+                  <button
+                    onClick={getValue}
+                    className="bg-blue-500 h-[25%] pt-[10px] px-10 py-2 rounded-r-lg text-white"
+                  >
                     Search
                   </button>
                 </div>
@@ -154,93 +175,110 @@ const Task = () => {
 
               <div className="pt-5 pl-3">
                 <div className=" grid grid-cols-3 gap-3">
-                  {tasks.map((task, index) => (
-                    <div
-                      key={task._id}
-                      className={`rounded-t-xl ${getTaskBackgroundColor(
-                        task.endDate
-                      )}`} // Apply conditional background color based on remaining days
-                    >
-                      <div className="h-8 grow "></div>
-                      <div className="p-4 relative bg-white">
-                        <h1 className="text-lg font-bold">Title</h1>
-                        <h3>{task.tittle}</h3>
-                        <h1 className="text-lg font-bold">Description</h1>
-                        <p className="text-gray-500">{task.description}</p>
-                        <div className="mt-4">
-                          <h4 className="text-lg font-bold">Attachment:</h4>
-                          <img
-                            src={`https://picsum.photos/200/300?random=${Math.floor(
-                              Math.random() * 1000
-                            )}`}
-                            alt="Attachment"
-                            className="mt-2 h-40 w-[24rem]"
-                          />
-                          <div className="flex mt-3 justify-between">
-                            <div className="flex flex-col">
-                              <div className="mb-2 space-y-2">
-                                <p className="text-md font-bold">Start Date</p>
-                                <p className="text-sm">{task.startDate}</p>
+                  {tasks
+                    .filter((task) => {
+                      if (
+                        task.tittle
+                          .toLowerCase()
+                          .includes(results.toLocaleLowerCase())
+                      ) {
+                        return task;
+                      } else {
+                        return task;
+                      }
+                    })
+                    .map((task) => (
+                      <div
+                        key={task._id}
+                        className={`rounded-t-xl ${getTaskBackgroundColor(
+                          task.endDate
+                        )}`}
+                      >
+                        <div className="h-8 grow "></div>
+                        <div className="p-4 relative bg-white">
+                          <h1 className="text-lg font-bold">Title</h1>
+                          <h3>{task.tittle}</h3>
+                          <h1 className="text-lg font-bold">Description</h1>
+                          <p className="text-gray-500">{task.description}</p>
+                          <div className="mt-4">
+                            <h4 className="text-lg font-bold">Attachment:</h4>
+                            <img
+                              src={`https://picsum.photos/200/300?random=${Math.floor(
+                                Math.random() * 1000
+                              )}`}
+                              alt="Attachment"
+                              className="mt-2 h-40 w-[24rem]"
+                            />
+                            <div className="flex mt-3 justify-between">
+                              <div className="flex flex-col">
+                                <div className="mb-2 space-y-2">
+                                  <p className="text-md font-bold">
+                                    Start Date
+                                  </p>
+                                  <p className="text-sm">{task.startDate}</p>
+                                </div>
                               </div>
-                            </div>
-                            <div className="flex flex-col">
-                              <div className="mb-2 space-y-2">
-                                <p className="text-md font-bold">End Date</p>
-                                <p className="text-sm">{task.endDate}</p>
+                              <div className="flex flex-col">
+                                <div className="mb-2 space-y-2">
+                                  <p className="text-md font-bold">End Date</p>
+                                  <p className="text-sm">{task.endDate}</p>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <span
-                          className="text-[#4BCBEB] hover:bg-gray-50 cursor-pointer absolute top-2 right-6"
-                          onClick={() => toggleOptions(task._id)}
-                        >
-                          <FontAwesomeIcon
-                            className="h-[30px]"
-                            icon={faEllipsisV}
-                          />
-                          {showOptions[task._id] &&
-                            selectedTaskId === task._id && (
-                              <div
-                                className="absolute  right-3 mt-2 w-[100px] rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
-                                role="menu"
-                                aria-orientation="vertical"
-                                aria-labelledby="options-menu"
-                              >
-                                <div className="py-1 font-bold" role="none">
-                                  <button
-                                    className=" px-4 py-2 text-[12px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full flex justify-between items-center"
-                                    role="menuitem"
-                                    onClick={() => handleDeleteClick(task._id)}
-                                  >
-                                    <img src="delete.png" alt="delete" />
-                                    <span>Delete</span>
-                                  </button>
 
-                                  <button
-                                    className=" px-4 py-2 text-[12px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full flex"
-                                    role="menuitem"
-                                    onClick={() => handleViewClick(task.id)}
-                                  >
-                                    <img src="eye.png" alt="delete" />
-                                    <span className="ml-[15px]">View</span>
-                                  </button>
+                          <span
+                            className="text-[#4BCBEB] hover:bg-gray-50 cursor-pointer absolute top-2 right-6"
+                            onClick={() => toggleOptions(task._id)}
+                          >
+                            <FontAwesomeIcon
+                              className="h-[30px]"
+                              icon={faEllipsisV}
+                            />
+                            {showOptions[task._id] &&
+                              selectedTaskId === task._id && (
+                                <div
+                                  className="absolute  right-3 mt-2 w-[100px] rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+                                  role="menu"
+                                  aria-orientation="vertical"
+                                  aria-labelledby="options-menu"
+                                >
+                                  <div className="py-1 font-bold" role="none">
+                                    <button
+                                      className=" px-4 py-2 text-[12px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full flex justify-between items-center"
+                                      role="menuitem"
+                                      onClick={() =>
+                                        handleDeleteClick(task._id)
+                                      }
+                                    >
+                                      <img src="delete.png" alt="delete" />
+                                      <span>Delete</span>
+                                    </button>
 
-                                  <button
-                                    className=" px-4 py-2 text-[12px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full flex "
-                                    role="menuitem"
-                                    onClick={() => handleEditClick(task._id)}
-                                  >
-                                    <img src="edit.png" alt="delete" />
-                                    <span className="ml-[15px]">Edit</span>
-                                  </button>
+                                    <button
+                                      className=" px-4 py-2 text-[12px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full flex"
+                                      role="menuitem"
+                                      onClick={() => handleViewClick(task.id)}
+                                    >
+                                      <img src="eye.png" alt="delete" />
+                                      <span className="ml-[15px]">View</span>
+                                    </button>
+
+                                    <button
+                                      className=" px-4 py-2 text-[12px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full flex "
+                                      role="menuitem"
+                                      onClick={() => handleEditClick(task._id)}
+                                    >
+                                      <img src="edit.png" alt="delete" />
+                                      <span className="ml-[15px]">Edit</span>
+                                    </button>
+                                  </div>
                                 </div>
-                              </div>
-                            )}
-                        </span>
+                              )}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </div>
 
