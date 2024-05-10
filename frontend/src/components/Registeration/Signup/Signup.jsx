@@ -35,23 +35,32 @@ function Signup() {
         body: JSON.stringify(formData),
       };
 
-      console.log(requestOptions);
+      // console.log(requestOptions);
 
       const response = await fetch(
         "http://localhost:3333/auth/sign-up",
         requestOptions
       );
+
+      const responseBody = await response.json();
+      // console.log(responseBody);
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        if (responseBody.statusCode == 409) {
+          toast.error("Email already exists", { autoClose: 2000 });
+        }
+        return;
+        // throw new Error("Network response was not ok");
       }
 
       setTimeout(() => {
         toast.success("Register Account Sucessfully", { autoClose: 1000 });
         resetForm();
         window.location.href = "/login";
-      }, 2000);
+      }, 1000);
     } catch (error) {
-      toast.error("Email already exists", { autoClose: 2000 });
+      toast.error("Something wrong. Try again later.", {
+        autoClose: 2000,
+      });
       console.error("There was a problem with the POST request:", error);
     } finally {
       setSubmitting(false);
@@ -219,7 +228,7 @@ function Signup() {
           </p>
         </div>
       </form>
-      <ToastContainer position="top-right" style={{ marginTop: "1rem" }} />
+      <ToastContainer position="top-right" style={{ marginTop: "0rem" }} />
     </div>
   );
 }

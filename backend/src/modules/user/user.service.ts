@@ -36,11 +36,7 @@ export class UserService {
       // To remove password from the response and findone function remove the password
       return await this.findOne(user._id);
     } catch (error) {
-      if (error.code === 11000) {
-        throw new ConflictException('User with this email already exists');
-      } else {
         Http500.throw(error);
-      }
     }
   }
 
@@ -122,12 +118,12 @@ export class UserService {
     try {
       const user = await this.userModel.findOne({ email }).exec();
       if (!user) {
-        throw new NotFoundException('User not found with email');
+        throw new NotFoundException({statusCode:402, message: "Email not found" });
       }
+  
       const passwordMatch = await bcrypt.compare(password, user.password);
-      console.log(passwordMatch);
       if (!passwordMatch) {
-        throw new Error('Invalid password');
+        throw new NotFoundException({ statusCode:401 , message: "Invalid password" });
       }
 
       if (user && user.status === UserStatus.ACTIVE) {
@@ -136,6 +132,9 @@ export class UserService {
       }
       return null;
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new NotFoundException('User not found');
     }
   }

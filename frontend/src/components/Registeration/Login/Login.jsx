@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Icon } from "react-icons-kit";
@@ -8,6 +8,12 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
+  const token = sessionStorage.getItem("token");
+  if (token) {
+    console.error("No token found in session storage.");
+    window.location.href = "/";
+  }
+
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
     password: Yup.string()
@@ -32,25 +38,31 @@ function Login() {
         body: JSON.stringify(formData),
       };
 
-      console.log(requestOptions);
+      // console.log(requestOptions);
       const response = await fetch(
         "http://localhost:3333/auth/sign-in",
         requestOptions
       );
+      const responseBody = await response.json();
       if (!response.ok) {
+        if (responseBody.statusCode == 402) {
+          toast.error("email not found", { autoClose: 2000 });
+        } else if (responseBody.statusCode == 401) {
+          toast.error("invalid Password", { autoClose: 2000 });
+        }
+        return;
         throw new Error("Network response was not ok");
       }
 
-      const data = await response.json();
-      const token = JSON.stringify(data);
-      // console.log(token);
-
+      const token = JSON.stringify(responseBody);
       sessionStorage.setItem("token", token);
-      toast.success("Please set a route for redirection", { autoClose: 2000 });
       resetForm();
       window.location.href = "/";
+      // console.log(data.message);
     } catch (error) {
-      toast.error("Invalid email or password", { autoClose: 2000 });
+      toast.error("something wrong", {
+        autoClose: 2000,
+      });
       console.error("There was a problem with the POST request:", error);
     } finally {
       setSubmitting(false);
