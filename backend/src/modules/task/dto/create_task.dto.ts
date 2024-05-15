@@ -27,9 +27,8 @@ export class create_task {
   @IsNotEmpty()
   endDate: string;
 
-  @ArrayMinSize(1)
-  @ArrayMaxSize(100)
+ 
   @ApiProperty({ required: true})
   @IsNotEmpty()
-  users: [];
+  users:string;
 }

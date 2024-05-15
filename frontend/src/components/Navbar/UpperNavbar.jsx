@@ -1,8 +1,7 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-import { Link, NavLink } from "react-router-dom";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDashboard, faGreaterThan } from "@fortawesome/free-solid-svg-icons";
+import { faGreaterThan } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 
 function UpperNavbar({ heading = "Dashboard" }) {
@@ -35,7 +34,7 @@ function UpperNavbar({ heading = "Dashboard" }) {
   }, []);
 
   return (
-    <nav className="sticky top-0 w-85 h-[90px] bg-white z-10">
+    <nav className="sticky top-0  h-[90px] bg-white z-10">
       <div className="w-full h-full flex justify-between items-center">
         {/* LEFT-Side */}
         <div className="w-[20%] h-full border-[1px] border-b-slate-300 border-r-slate-200  place-content-center flex flex-col items-center justify-center">

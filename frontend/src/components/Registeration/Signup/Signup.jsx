@@ -6,6 +6,7 @@ import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Spinner } from "@material-tailwind/react";
 
 function Signup() {
   const validationSchema = Yup.object().shape({
@@ -18,9 +19,10 @@ function Signup() {
 
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(eyeOff);
-
+  const [loading, setLoading] = useState(false);
   const handleSubmitForm = async (values, { setSubmitting, resetForm }) => {
     try {
+      setLoading(true);
       const formData = {
         ...values,
         status: "ACTIVE",
@@ -51,7 +53,7 @@ function Signup() {
         return;
         // throw new Error("Network response was not ok");
       }
-
+      setLoading(false);
       setTimeout(() => {
         toast.success("Register Account Sucessfully", { autoClose: 1000 });
         resetForm();
@@ -214,10 +216,15 @@ function Signup() {
 
           <button
             type="submit"
-            disabled={isSubmitting}
-            className="w-[400px]  h-12 bg-cyan-400 rounded-lg text-white text-xl font-bold"
+            disabled={isSubmitting || loading} // Adjusted the disabled condition
+            className="w-[400px] h-12 bg-cyan-400 rounded-lg text-white text-xl font-bold flex justify-center items-center" // Added flex styles
           >
-            Sign Up
+            {loading && (
+              <span className="mr-4">
+                <Spinner color="blue" />
+              </span>
+            )}
+            <span> Sign UP</span>
           </button>
 
           <p className="text-med text-gray-600 justify-center text-center">

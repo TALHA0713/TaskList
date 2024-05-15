@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   RouterProvider,
   createRoutesFromElements,
@@ -12,26 +12,22 @@ import {
   Signup,
   Forget,
   Reset,
-
   Notification,
   Home,
   Task,
   AddTask,
-  Users
-  
+  Users,
 } from "./components";
 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path={"/"} element={<RouterLayout />}>
-
         <Route path="/" element={<Home />} />
         <Route path="/Task" element={<Task />} />
         <Route path="/addTask" element={<AddTask />} />
         <Route path="/notify" element={<Notification />} />
-        <Route path="/users" element = {<Users />} />
-
+        <Route path="/users" element={<Users />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Signup" element={<Signup />} />
         <Route path="/forget" element={<Forget />} />

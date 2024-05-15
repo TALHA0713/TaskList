@@ -136,9 +136,9 @@ export class UserController {
     description: 'User Not Found',
   })
   @UseGuards(AuthGuard('jwt'))
-  @Delete('delete')
-  remove(@Request() req) {
-    const { id } = req.user;
+  @Delete(':id')
+  remove(@Param("id") id:string) {
+    // const { id } = req.user;
     return this.userService.remove(id);
   }
 

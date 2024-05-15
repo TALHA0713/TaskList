@@ -6,7 +6,8 @@ import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Spinner } from "@material-tailwind/react";
 function Login() {
   const token = sessionStorage.getItem("token");
   if (token) {
@@ -23,6 +24,7 @@ function Login() {
 
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(eyeOff);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmitForm = async (values, { setSubmitting, resetForm }) => {
     try {
@@ -37,13 +39,14 @@ function Login() {
         },
         body: JSON.stringify(formData),
       };
-
-      // console.log(requestOptions);
+      setLoading(true);
       const response = await fetch(
         "http://localhost:3333/auth/sign-in",
         requestOptions
       );
+
       const responseBody = await response.json();
+      setLoading(false);
       if (!response.ok) {
         if (responseBody.statusCode == 402) {
           toast.error("email not found", { autoClose: 2000 });
@@ -60,9 +63,10 @@ function Login() {
       window.location.href = "/";
       // console.log(data.message);
     } catch (error) {
-      toast.error("something wrong", {
+      toast.error("Server Does not response Plz try again later", {
         autoClose: 2000,
       });
+      setLoading(false);
       console.error("There was a problem with the POST request:", error);
     } finally {
       setSubmitting(false);
@@ -195,10 +199,15 @@ function Login() {
 
           <button
             type="submit"
-            disabled={isSubmitting}
-            className="w-[400px]  h-12 bg-cyan-400 rounded-lg text-white text-xl font-bold"
+            disabled={isSubmitting || loading} // Adjusted the disabled condition
+            className="w-[400px] h-12 bg-cyan-400 rounded-lg text-white text-xl font-bold flex justify-center items-center" // Added flex styles
           >
-            Log In
+            {loading && (
+              <span className="mr-4">
+                <Spinner color="blue" />
+              </span>
+            )}
+            <span>Sign In</span>
           </button>
 
           <p className="text-med text-gray-600 justify-center text-center">

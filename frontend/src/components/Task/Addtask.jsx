@@ -20,7 +20,7 @@ const AddTask = () => {
     const token = decodedToken.token;
     const arrayToken = token.split(".");
     const tokenPayload = JSON.parse(atob(arrayToken[1]));
-    const userId = tokenPayload.id;
+    const userId = tokenPayload.id.toString();
 
     try {
       const requestOptions = {
@@ -31,7 +31,7 @@ const AddTask = () => {
         },
         body: JSON.stringify({
           ...formData,
-          users: [userId],
+          users: userId,
         }),
       };
 
@@ -44,7 +44,8 @@ const AddTask = () => {
       const data = await response.json();
       window.location.href = "/Task";
 
-      console.log("Task added successfully:", data);
+      console.log(data);
+      // console.log("Task added successfully:", data);
 
       setFormData({
         tittle: "",
@@ -109,17 +110,17 @@ const AddTask = () => {
             />
           </div>
 
-          <div class="mb-4">
+          <div className="mb-4">
             <label
-              class="block text-gray-700 text-sm font-bold mb-2"
-              for="attachment"
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="attachment"
             >
               Attachment
             </label>
 
             <input
               type="file"
-              class="shadow appearance-none border rounded-lg w-full py-10 px-[105px] text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded-lg w-full py-10 px-[105px] text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="attachment"
             />
           </div>

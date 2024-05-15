@@ -17,8 +17,8 @@ export class Task extends Document {
   @Prop({ required: true })
   endDate: string;
 
-  @Prop({ type: [{ type: mongoose.Types.ObjectId, ref: 'User' }] })
-  users: string[]; 
+  @Prop({  type: mongoose.Types.ObjectId, ref: 'User'  })
+  users: string; 
 
 }
 

@@ -35,17 +35,19 @@ const Task = () => {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState("");
 
-  useEffect(() => {
-    tasks.filter((task) => {
-      if (search == "") {
-        window.location.href = "Task";
-        return task;
-      }
-    });
-  }, [search]);
+  // useEffect(() => {
+  //   tasks.filter((task) => {
+  //     if (search == "") {
+  //       window.location.href = "Task";
+  //       return task;
+  //     }
+  //   });
+  // }, [search]);
 
   const getValue = () => {
+    console.log(search);
     setResults(search);
+    console.log(results);
   };
 
   useEffect(() => {
@@ -54,13 +56,22 @@ const Task = () => {
         const token = sessionStorage.getItem("token");
         const decodedToken = JSON.parse(token);
         const token1 = decodedToken.token;
+        const arrayToken = token1.split(".");
+        const tokenPayload = JSON.parse(atob(arrayToken[1]));
+        const userId = tokenPayload.id.toString();
 
         const response = await axios.get("http://localhost:3333/task", {
           headers: {
             Authorization: `Bearer ${token1}`,
           },
         });
-        setTasks(response.data); // Set fetched tasks data
+        // console.log(response.data);
+        const userTasks = response.data.filter(
+          (task) => task.users._id === userId
+        );
+        setTasks(userTasks);
+        // console.log(userTasks);
+        // setTasks(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -108,7 +119,7 @@ const Task = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-slate-200">
+    <div className="min-h-screen  bg-slate-200">
       <UpperNavbar heading="Notifications" />
       <div className="w-full h-full flex">
         <div id="left-navbar" className="w-[22%] h-full ">
@@ -165,7 +176,7 @@ const Task = () => {
                     }}
                   />
                   <button
-                    onClick={getValue}
+                    // onClick={() => setSearch(search)}
                     className="bg-blue-500 h-[25%] pt-[10px] px-10 py-2 rounded-r-lg text-white"
                   >
                     Search
@@ -177,16 +188,28 @@ const Task = () => {
                 <div className=" grid grid-cols-3 gap-3">
                   {tasks
                     .filter((task) => {
-                      if (
-                        task.tittle
-                          .toLowerCase()
-                          .includes(results.toLocaleLowerCase())
-                      ) {
+                      if (search === "") {
                         return task;
-                      } else {
+                      } else if (
+                        task.tittle.toLowerCase().includes(search.toLowerCase())
+                      ) {
                         return task;
                       }
                     })
+                    // .filter((task) => {
+                    //   if (
+                    //     task.tittle
+                    //       .toLowerCase()
+                    //       .includes(results.toLowerCase())
+                    //   ) {
+                    //     // console.log(task.tittle);
+                    //     return task;
+                    //   } else {
+                    //     console.log("can you work with this task");
+                    //     return task;
+                    //   }
+                    // })
+
                     .map((task) => (
                       <div
                         key={task._id}
@@ -199,7 +222,9 @@ const Task = () => {
                           <h1 className="text-lg font-bold">Title</h1>
                           <h3>{task.tittle}</h3>
                           <h1 className="text-lg font-bold">Description</h1>
-                          <p className="text-gray-500">{task.description}</p>
+                          <p className="text-gray-500 h-24">
+                            {task.description}
+                          </p>
                           <div className="mt-4">
                             <h4 className="text-lg font-bold">Attachment:</h4>
                             <img
@@ -235,6 +260,7 @@ const Task = () => {
                               className="h-[30px]"
                               icon={faEllipsisV}
                             />
+
                             {showOptions[task._id] &&
                               selectedTaskId === task._id && (
                                 <div
@@ -253,15 +279,6 @@ const Task = () => {
                                     >
                                       <img src="delete.png" alt="delete" />
                                       <span>Delete</span>
-                                    </button>
-
-                                    <button
-                                      className=" px-4 py-2 text-[12px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full flex"
-                                      role="menuitem"
-                                      onClick={() => handleViewClick(task.id)}
-                                    >
-                                      <img src="eye.png" alt="delete" />
-                                      <span className="ml-[15px]">View</span>
                                     </button>
 
                                     <button

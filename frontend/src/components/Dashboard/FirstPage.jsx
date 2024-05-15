@@ -6,8 +6,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 
-import "react-calendar/dist/Calendar.css";
-
 const Firstpage = () => {
   useEffect(() => {
     const token = sessionStorage.getItem("token");
@@ -158,7 +156,6 @@ const Firstpage = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateCalendar />
           </LocalizationProvider>
-          {/* <Calendar className="w-full h-full" /> */}
         </div>
       </section>
     </div>

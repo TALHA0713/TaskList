@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 function SideNavbar() {
@@ -37,6 +37,11 @@ function SideNavbar() {
 
     fetchUserData();
   }, []);
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("token");
+    window.location.href = "/login";
+  };
 
   return (
     <nav
@@ -103,6 +108,14 @@ function SideNavbar() {
               className="w-7 h-7 rounded-full"
             />
             <Link to="/setting">Settings</Link>
+          </li>
+          <li>
+            <button
+              className="ml-5 mb-3 w-3/5 rounded-lg font-semibold  border bg-cyan-400 text-2xl"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
           </li>
         </ul>
       </div>
