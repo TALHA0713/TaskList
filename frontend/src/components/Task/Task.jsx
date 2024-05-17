@@ -120,7 +120,7 @@ const Task = () => {
 
   return (
     <div className="min-h-screen  bg-slate-200">
-      <UpperNavbar heading="Notifications" />
+      <UpperNavbar heading="Tasks" />
       <div className="w-full h-full flex">
         <div id="left-navbar" className="w-[22%] h-full ">
           <SideNavbar />
